@@ -5,7 +5,15 @@
     :image-url="image.url"
     :image-alt="image.title"
     :author="author"
-  />
+  >
+    <div>{{ author }}</div>
+    <div class="text-2xl font-medium">
+      {{ title }}
+    </div>
+    <p class="whitespace-pre-wrap mt-3">
+      {{ description }}
+    </p>
+  </PCover>
   <div class="container mx-auto px-5">
     <h2 class="font-bold text-2xl mt-8">
       所有集數
@@ -17,10 +25,10 @@
       :title="item.title"
       :author="title"
       :description="item.description"
-      :create-at="item['pubDate']"
+      :create-at="item.pubDate"
       :duration="item['itunes:duration']"
       :audio-url="item.link"
-      @click="toEpisodePage"
+      @click="toEpisodePage(item)"
     >
       {{ item }}
     </PItem>
@@ -39,7 +47,7 @@ export default {
     PItem
   },
   setup () {
-    const router = useRouter
+    const router = useRouter()
 
     const states = reactive({
       title: '',
@@ -65,16 +73,10 @@ export default {
       states.description = description
     }
 
-    const toEpisodePage = () => {
+    const toEpisodePage = episode => {
       console.log('next page')
-      router.push({
-        name: 'episode',
-        params: {
-          title: '123123'
-        }
-      })
+      router.push(`/episode/${episode.guid}`)
     }
-
     onMounted(() => {
       init()
     })

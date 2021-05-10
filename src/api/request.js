@@ -1,29 +1,51 @@
 import parser from 'fast-xml-parser'
-export function fetchChannel () {
-  return fetch('/db.xml')
-    .then(res => {
-      return res.text()
-    })
-    .then(xml => {
-      const {
-        rss: {
-          channel: {
-            title,
-            image,
-            item,
-            description,
-            'itunes:author': author
-          }
-        }
-      } = parser.parse(xml)
-      const json = parser.parse(xml)
-      console.log(json)
-      return {
-        title,
-        image,
-        item,
-        description,
-        author
-      }
-    })
+let channel = null
+
+async function fetchRSS () {
+  const result = await fetch('/db.xml')
+  const xml = await result.text()
+  const json = parser.parse(xml)
+  return json.rss
+}
+
+export async function fetchChannel () {
+  if (!channel) {
+    const rss = await fetchRSS()
+    channel = rss.channel
+  }
+
+  const {
+    title,
+    image,
+    item,
+    description,
+    'itunes:author': author
+  } = channel
+
+  return {
+    title,
+    image,
+    item,
+    description,
+    author
+  }
+}
+
+export async function fetchEpisodeById (id) {
+  if (!channel) {
+    const rss = await fetchRSS()
+    channel = rss.channel
+  }
+  const {
+    item: episodes
+  } = channel
+
+  const episode = episodes.find(episode => episode.guid === id)
+  if (!episode) return
+  console.log(episode)
+  return {
+    ...episode,
+    channelName: channel.title,
+    imageUrl: channel.image.url
+  }
 }

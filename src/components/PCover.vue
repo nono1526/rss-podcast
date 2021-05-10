@@ -6,13 +6,7 @@
       :src="imageUrl"
     >
     <div class="flex-1 ml-5">
-      <div>{{ author }}</div>
-      <div class="text-2xl font-medium">
-        {{ title }}
-      </div>
-      <p class="whitespace-pre-wrap mt-3 max-w">
-        {{ description }}
-      </p>
+      <slot />
     </div>
   </div>
 </template>
@@ -20,18 +14,6 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    author: {
-      type: String,
-      default: ''
-    },
     imageUrl: {
       type: String,
       default: ''
