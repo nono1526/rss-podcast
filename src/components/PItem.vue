@@ -1,6 +1,9 @@
 <template>
-  <div class="shadow my-8 p-5 bg-white">
-    <div class="flex ">
+  <div
+    class="shadow my-8 p-5 bg-white cursor-pointer hover:shadow-lg transition-all duration-500"
+    @click="$emit('click', $event)"
+  >
+    <div class="flex">
       <img
         :src="imageUrl"
         class="w-14 h-14 border"
@@ -56,6 +59,7 @@ export default {
       default: ''
     }
   },
+  emits: ['click'],
   setup (props) {
     const createDate = computed(() => {
       const date = new Date(props.createAt)
