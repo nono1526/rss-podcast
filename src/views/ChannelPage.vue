@@ -20,6 +20,7 @@
       :create-at="item['pubDate']"
       :duration="item['itunes:duration']"
       :audio-url="item.link"
+      @click="toEpisodePage"
     >
       {{ item }}
     </PItem>
@@ -28,6 +29,7 @@
 
 <script>
 import { onMounted, reactive, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 import { fetchChannel } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
 import PItem from '@src/components/PItem.vue'
@@ -37,6 +39,8 @@ export default {
     PItem
   },
   setup () {
+    const router = useRouter
+
     const states = reactive({
       title: '',
       author: '',
@@ -60,12 +64,24 @@ export default {
       states.author = author
       states.description = description
     }
+
+    const toEpisodePage = () => {
+      console.log('next page')
+      router.push({
+        name: 'episode',
+        params: {
+          title: '123123'
+        }
+      })
+    }
+
     onMounted(() => {
       init()
     })
 
     return {
-      ...toRefs(states)
+      ...toRefs(states),
+      toEpisodePage
     }
   }
 }
