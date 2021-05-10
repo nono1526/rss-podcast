@@ -1,16 +1,15 @@
 <template>
-  <div class="">
-    <div />
-  </div>
+  <div class="">{{title}}</div>
+  <div>{{ description }}</div>
 </template>
 
 <script>
 import { onMounted, reactive, toRefs } from 'vue'
-import { fetchChannel } from '@/api/request.js'
+import { fetchChannel } from '@src/api/request.js'
 export default {
   setup () {
     const states = reactive({
-      title: '1',
+      title: '',
       image: {},
       item: [],
       description: ''
