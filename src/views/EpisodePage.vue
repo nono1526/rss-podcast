@@ -10,6 +10,13 @@
         <div class="text-sm mt-5">
           {{ channelName }} - {{ author }}
         </div>
+
+        <button
+          class="border px-5 py-3"
+          @click="play(audio)"
+        >
+          Play
+        </button>
         <div>
           {{ createDate }} · {{ showMinutesDuration }}
         </div>
@@ -27,7 +34,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed } from 'vue'
+import { onMounted, reactive, toRefs, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEpisodeById } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
@@ -45,8 +52,12 @@ export default {
       imageUrl: '',
       createAt: 'null',
       duration: 0,
-      author: ''
+      author: '',
+      audio: {}
     })
+
+    const audioControl = inject('audio')
+
     const init = async () => {
       const { id } = route.params
       const episode = await fetchEpisodeById(id)
@@ -57,7 +68,9 @@ export default {
       states.createAt = episode.pubDate
       states.duration = episode['itunes:duration']
       states.author = episode['itunes:author']
+      states.audio = episode.audio
     }
+
     // @todo create composition api
     const createDate = computed(() => {
       const date = new Date(states.createAt)
@@ -67,6 +80,14 @@ export default {
       const minutes = Math.floor(states.duration / 60)
       return `${minutes} 分鐘`
     })
+
+    const play = audio => {
+      audioControl.url = `${audio.url}?timestamp=${Date.now()}`
+      console.log(states.imageUrl)
+      audioControl.cover = states.imageUrl
+      audioControl.title = states.title
+      audioControl.subTitle = states.channelName
+    }
     onMounted(() => {
       init()
     })
@@ -74,7 +95,8 @@ export default {
     return {
       ...toRefs(states),
       createDate,
-      showMinutesDuration
+      showMinutesDuration,
+      play
     }
   }
 }

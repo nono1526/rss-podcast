@@ -1,8 +1,18 @@
 <template>
   <div
-    class="fixed bottom-0 w-full bg-white border-t h-20"
+    class="fixed bottom-0 w-full bg-white border-t h-20 flex"
   >
-    {{ isPlay }}
+    <img
+      :src="cover"
+      class="h-full"
+    >
+
+    <div class="flex flex-col h-full justify-center mx-5 text-sm">
+      <div>{{ title }}</div>
+      <div class="text-gray-400 text-xs">
+        {{ subTitle }}
+      </div>
+    </div>
     <button
       class="border p-5"
       @click="toggleAudio"
@@ -26,17 +36,25 @@ export default {
     },
     isPlay: {
       type: Boolean,
-      default: false
+      default: ''
     },
     visible: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    subTitle: {
+      type: String,
+      default: ''
     }
   },
   emits: ['update:isPlay', 'update:url'],
   setup (props, { emit }) {
     const audio = new Audio()
-
+    // audio.addEventListener()
     watch(() => props.url, url => {
       audio.src = url
       audio.currentTime = 0

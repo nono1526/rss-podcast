@@ -1,10 +1,38 @@
 <template>
-  <div class="w-screen h-screen bg-gray-50">
+  <div class="w-screen h-screen bg-gray-50 mb-52">
     <router-view />
+    <PPlayer
+      v-model:isPlay="isPlay"
+      v-model:url="url"
+      :cover="cover"
+      :title="title"
+      :sub-title="subTitle"
+    />
   </div>
 </template>
 
-<script setup>
+<script>
+import { toRefs, reactive, provide } from 'vue'
+import PPlayer from '@src/components/PPlayer.vue'
+export default {
+  components: {
+    PPlayer
+  },
+  setup () {
+    const audio = reactive({
+      isPlay: false,
+      url: '',
+      cover: '',
+      title: '',
+      subTitle: ''
+    })
+
+    provide('audio', audio)
+    return {
+      ...toRefs(audio)
+    }
+  }
+}
 </script>
 
 <style>

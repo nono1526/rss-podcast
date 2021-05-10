@@ -74,8 +74,7 @@ export default {
     }
 
     const toEpisodePage = episode => {
-      console.log('next page')
-      router.push(`/episode/${episode.guid}`)
+      router.push(`/episode/${episode.guid['#text']}`)
     }
     onMounted(() => {
       init()
