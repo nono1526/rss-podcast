@@ -11,16 +11,19 @@ export function fetchChannel () {
             title,
             image,
             item,
-            description
+            description,
+            'itunes:author': author
           }
         }
       } = parser.parse(xml)
-
+      const json = parser.parse(xml)
+      console.log(json)
       return {
         title,
         image,
         item,
-        description
+        description,
+        author
       }
     })
 }

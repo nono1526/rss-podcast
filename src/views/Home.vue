@@ -7,15 +7,22 @@
     :author="author"
   />
   <div class="container mx-auto px-5">
-    <h2 class="text-w">
+    <h2 class="font-bold text-2xl mt-8">
       所有集數
     </h2>
-    <PList
+    <PItem
       v-for="(item, i) in items"
       :key="i"
+      :image-url="image.url"
+      :title="item.title"
+      :author="title"
+      :description="item.description"
+      :create-at="item['pubDate']"
+      :duration="item['itunes:duration']"
+      :audio-url="item.link"
     >
       {{ item }}
-    </PList>
+    </PItem>
   </div>
 </template>
 
@@ -23,9 +30,11 @@
 import { onMounted, reactive, toRefs } from 'vue'
 import { fetchChannel } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
+import PItem from '@src/components/PItem.vue'
 export default {
   components: {
-    PCover
+    PCover,
+    PItem
   },
   setup () {
     const states = reactive({

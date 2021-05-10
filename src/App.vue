@@ -1,9 +1,10 @@
 <template>
-  <router-view />
+  <div class="w-screen h-screen bg-gray-50">
+    <router-view />
+  </div>
 </template>
 
 <script setup>
-xxx
 </script>
 
 <style>
