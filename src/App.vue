@@ -9,7 +9,6 @@
       :title="title"
       :sub-title="subTitle"
     />
-    {{ currentTime }}
   </div>
 </template>
 
