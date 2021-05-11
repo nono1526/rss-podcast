@@ -1,5 +1,5 @@
 <template>
-  <div class="flex p-5 bg-blue-400 text-white">
+  <div class="flex p-5 text-white bg-gradient-to-r from-blue-500 to-green-300 ">
     <img
       class="max-w-lg w-60 h-60 border"
       :alt="imageAlt"

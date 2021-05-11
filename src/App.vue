@@ -4,10 +4,12 @@
     <PPlayer
       v-model:isPlay="isPlay"
       v-model:url="url"
+      v-model:currentTime="currentTime"
       :cover="cover"
       :title="title"
       :sub-title="subTitle"
     />
+    {{ currentTime }}
   </div>
 </template>
 
@@ -24,7 +26,8 @@ export default {
       url: '',
       cover: '',
       title: '',
-      subTitle: ''
+      subTitle: '',
+      currentTime: 0
     })
 
     provide('audio', audio)
