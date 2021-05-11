@@ -17,15 +17,22 @@
       <div class="w-6/12 mx-auto text-center ">
         music manual
       </div>
-      <div class="h-1 shadow w-6/12 mx-auto rounded relative">
+      <div
+        class="h-1 w-6/12 mx-auto relative"
+      >
         <div
-          class="h-full absolute bg-red-400"
-          :style="{
-            width: `${played * 100}%`
-          }"
-        />
+          class="h-full w-full absolute rounded shadow cursor-pointer"
+          @click="setCurrentTimeByClickBar"
+        >
+          <div
+            class="h-full bg-blue-400 rounded"
+            :style="{
+              width: `${played * 100}%`
+            }"
+          />
+        </div>
         <div
-          class="h-3 w-3 rounded-full bg-red-400 absolute shadow transform -translate-y-2/4 top-2/4 -translate-x-2/4 cursor-pointer"
+          class="h-3 w-3 rounded-full bg-blue-500 absolute shadow-2xl transform -translate-y-2/4 top-2/4 -translate-x-2/4 cursor-pointer"
           :style="{
             left: `${played * 100}%`
           }"
@@ -80,8 +87,7 @@ export default {
     const audio = new Audio()
     const states = reactive({
       played: 0,
-      loaded: 0,
-      duration: 0
+      loaded: 0
     })
     audio.addEventListener('loadedmetadata', e => {
       states.duration = audio.duration
@@ -90,15 +96,16 @@ export default {
     audio.addEventListener('timeupdate', e => {
       states.played = audio.currentTime / audio.duration
       states.loaded = audio.buffered.end(0) / audio.duration
-      console.log(states.played * 100)
-    })
-    audio.addEventListener('seeking', e => {
-      console.log(e, 'audio process')
     })
 
-    // const computed(() => {
+    const setCurrentTimeByClickBar = e => {
+      e.stopPropagation()
+      const x = e.layerX
+      const { width } = e.currentTarget.getBoundingClientRect()
+      const offsetPrecent = x / width
+      audio.currentTime = audio.duration * offsetPrecent
+    }
 
-    // })
     watch(() => props.url, url => {
       audio.src = url
       audio.currentTime = 0
@@ -127,6 +134,7 @@ export default {
     })
     return {
       toggleAudio,
+      setCurrentTimeByClickBar,
       ...toRefs(states)
     }
   }
