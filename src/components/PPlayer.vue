@@ -15,13 +15,15 @@
     </div>
     <div class="flex-1 flex flex-col justify-center">
       <div
-        class="w-6/12 mx-auto flex items-center"
+        class="w-7/12 mx-auto flex items-center"
       >
         <span class="mr-3 text-gray-500 w-14 text-right text-sm">{{ playedTime }}</span>
         <PSlider
           :value="currentTime"
           :max="duration"
-          @click="setCurrentTimeByClickBar"
+          @input="$emit('update:currentTime', $event)"
+          @dragstart="dragstart"
+          @dragend="dragend"
         />
         <span class="ml-3 w-14 text-gray-500 text-sm">{{ restTime }}</span>
       </div>
@@ -76,6 +78,7 @@ export default {
   emits: ['update:isPlay', 'update:url', 'update:currentTime'],
   setup (props, { emit }) {
     const audio = new Audio()
+    let isDragging = false
     const states = reactive({
       played: 0,
       loaded: 0,
@@ -88,16 +91,18 @@ export default {
     audio.addEventListener('timeupdate', e => {
       states.played = audio.currentTime / audio.duration
       states.loaded = audio.buffered.end(0) / audio.duration
+      if (isDragging) return
       emit('update:currentTime', audio.currentTime)
     })
 
-    const setCurrentTimeByClickBar = e => {
-      const x = e.layerX
-      const { width } = e.currentTarget.getBoundingClientRect()
-      const offsetPrecent = x / width
-      const currentTime = audio.duration * offsetPrecent
+    const setAudioCurrentTime = currentTime => {
       audio.currentTime = currentTime
-      emit('update:currentTime', currentTime)
+    }
+
+    const dragend = e => {
+      if (!isDragging) return
+      setAudioCurrentTime(props.currentTime)
+      isDragging = false
     }
 
     const playedTime = computed(() => {
@@ -153,14 +158,19 @@ export default {
       emit('update:isPlay', !isPlay)
     }
 
+    const dragstart = () => {
+      isDragging = true
+    }
+
     onMounted(() => {
       console.log(audio)
     })
     return {
       toggleAudio,
-      setCurrentTimeByClickBar,
+      dragend,
       playedTime,
       restTime,
+      dragstart,
       ...toRefs(states)
     }
   }
