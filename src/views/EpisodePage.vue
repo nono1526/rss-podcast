@@ -3,20 +3,21 @@
     :image-url="imageUrl"
   >
     <div class="flex flex-col h-full">
-      <div class="text-2xl font-medium">
+      <div class="text-6xl font-medium">
         {{ title }}
       </div>
       <div class="mt-auto">
-        <div class="text-sm mt-5">
+        <PBtn icon>
+          <PlayIcon
+            width="2rem"
+            height="2rem"
+            :show-pause="canPlay"
+            @click="play(audio)"
+          />
+        </PBtn>
+        <div class="text-sm mt-3">
           {{ channelName }} - {{ author }}
         </div>
-
-        <button
-          class="border px-5 py-3"
-          @click="play(audio)"
-        >
-          Play
-        </button>
         <div>
           {{ createDate }} · {{ showMinutesDuration }}
         </div>
@@ -38,10 +39,14 @@ import { onMounted, reactive, toRefs, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEpisodeById } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
+import PlayIcon from '@src/components/PlayIcon.vue'
+import PBtn from '@src/components/PBtn.vue'
 
 export default {
   components: {
-    PCover
+    PCover,
+    PlayIcon,
+    PBtn
   },
   setup () {
     const route = useRoute()
@@ -53,14 +58,15 @@ export default {
       createAt: 'null',
       duration: 0,
       author: '',
-      audio: {}
+      audio: {},
+      id: ''
     })
-
     const audioControl = inject('audio')
 
     const init = async () => {
       const { id } = route.params
       const episode = await fetchEpisodeById(id)
+      states.id = episode.id
       states.title = episode.title
       states.description = episode.description
       states.channelName = episode.channelName
@@ -82,12 +88,25 @@ export default {
     })
 
     const play = audio => {
-      audioControl.url = `${audio.url}?timestamp=${Date.now()}`
-      console.log(states.imageUrl)
-      audioControl.cover = states.imageUrl
-      audioControl.title = states.title
-      audioControl.subTitle = states.channelName
+      if (isPlayingEpisode.value) {
+        audioControl.isPlay = !audioControl.isPlay
+      } else {
+        audioControl.url = `${audio.url}?timestamp=${Date.now()}`
+        audioControl.cover = states.imageUrl
+        audioControl.title = states.title
+        audioControl.subTitle = states.channelName
+        audioControl.nowPlayingId = states.id
+      }
     }
+
+    const isPlayingEpisode = computed(() => {
+      return audioControl.nowPlayingId === states.id
+    })
+
+    const canPlay = computed(() => {
+      const isSameEpisode = audioControl.nowPlayingId === states.id
+      return audioControl.isPlay && isSameEpisode
+    })
     onMounted(() => {
       init()
     })
@@ -96,7 +115,8 @@ export default {
       ...toRefs(states),
       createDate,
       showMinutesDuration,
-      play
+      play,
+      canPlay
     }
   }
 }
