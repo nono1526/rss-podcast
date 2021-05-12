@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, inject } from 'vue'
+import { onMounted, reactive, toRefs, computed, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEpisodeById } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
@@ -113,6 +113,11 @@ export default {
       const isSameEpisode = audioControl.nowPlayingId === states.id
       return audioControl.isPlay && isSameEpisode
     })
+
+    watch(() => route.params, () => {
+      init()
+    })
+
     onMounted(() => {
       init()
     })

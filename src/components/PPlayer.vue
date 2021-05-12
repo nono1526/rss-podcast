@@ -8,9 +8,13 @@
   >
     <img
       :src="cover"
-      class="h-full"
+      class="h-full cursor-pointer"
+      @click="$emit('click:info')"
     >
-    <div class="flex flex-col h-full justify-center mx-5 text-sm w-48">
+    <div
+      class="flex flex-col h-full justify-center mx-5 text-sm w-48 cursor-pointer"
+      @click="$emit('click:info')"
+    >
       <div class="truncate">
         {{ title }}
       </div>
@@ -137,7 +141,7 @@ export default {
       default: false
     }
   },
-  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next'],
+  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next', 'click:info'],
   setup (props, { emit }) {
     let audio
     let isDragging = false

@@ -13,6 +13,7 @@
       :has-next="hasNext"
       :has-prev="hasPrev"
       fixed
+      @click:info="toEpisodePage"
       @click:prev="toEpisodeById(prevEpisode)"
       @click:next="toEpisodeById(nextEpisode)"
     />
@@ -22,6 +23,7 @@
 <script>
 import { toRefs, reactive, provide, computed } from 'vue'
 import { fetchEpisodeById } from '@src/api/request.js'
+import { useRouter } from 'vue-router'
 
 import PPlayer from '@src/components/PPlayer.vue'
 export default {
@@ -29,6 +31,8 @@ export default {
     PPlayer
   },
   setup () {
+    const router = useRouter()
+
     const audio = reactive({
       isPlay: false,
       url: '',
@@ -50,6 +54,9 @@ export default {
     const hasNext = computed(() => {
       return audio.nextEpisode !== null
     })
+    const toEpisodePage = () => {
+      router.push(`/episode/${audio.nowPlayingId}`)
+    }
     const toEpisodeById = async id => {
       const episode = await fetchEpisodeById(id)
       audio.nowPlayingId = episode.id
@@ -70,7 +77,8 @@ export default {
       ...toRefs(audio),
       toEpisodeById,
       hasPrev,
-      hasNext
+      hasNext,
+      toEpisodePage
     }
   }
 }
