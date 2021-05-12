@@ -141,7 +141,7 @@ export default {
       default: false
     }
   },
-  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next', 'click:info'],
+  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next', 'click:info', 'ended'],
   setup (props, { emit }) {
     let audio
     let isDragging = false
@@ -168,21 +168,25 @@ export default {
       if (isDragging) return
       emit('update:currentTime', audio.currentTime)
     }
-
+    const onEnded = e => {
+      emit('ended', e)
+    }
     const bindAudioEvents = () => {
       audio.addEventListener('loadedmetadata', onLoadmetadata)
       audio.addEventListener('loadeddata', showPlayer)
       audio.addEventListener('timeupdate', onTimeUpdate)
+      audio.addEventListener('ended', onEnded)
     }
 
     const unBindAudioEvents = () => {
       audio.removeEventListener('loadedmetadata', onLoadmetadata)
       audio.removeEventListener('loadeddata', showPlayer)
       audio.removeEventListener('timeupdate', onTimeUpdate)
+      audio.removeEventListener('ended', onEnded)
     }
 
     const setAudioCurrentTime = currentTime => {
-      audio.currentTime = currentTime
+      audio.currentTime = currentTime - 0.1 // @issue 剛好有時不會觸發 ended，所以給 100ms 緩衝
     }
 
     const dragend = e => {

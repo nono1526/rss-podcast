@@ -16,6 +16,7 @@
       @click:info="toEpisodePage"
       @click:prev="toEpisodeById(prevEpisode)"
       @click:next="toEpisodeById(nextEpisode)"
+      @ended="toPrevEpisode"
     />
   </div>
 </template>
@@ -73,12 +74,21 @@ export default {
       audio.url = episode.audio.url
     }
 
+    const toPrevEpisode = e => {
+      if (hasPrev.value) {
+        toEpisodeById(audio.prevEpisode)
+      } else {
+        audio.isPlay = false
+      }
+    }
+
     return {
       ...toRefs(audio),
       toEpisodeById,
       hasPrev,
       hasNext,
-      toEpisodePage
+      toEpisodePage,
+      toPrevEpisode
     }
   }
 }
