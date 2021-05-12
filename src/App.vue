@@ -10,13 +10,19 @@
       :cover="cover"
       :title="title"
       :sub-title="subTitle"
+      :has-next="hasNext"
+      :has-prev="hasPrev"
       fixed
+      @click:prev="toEpisodeById(prevEpisode)"
+      @click:next="toEpisodeById(nextEpisode)"
     />
   </div>
 </template>
 
 <script>
-import { toRefs, reactive, provide } from 'vue'
+import { toRefs, reactive, provide, computed } from 'vue'
+import { fetchEpisodeById } from '@src/api/request.js'
+
 import PPlayer from '@src/components/PPlayer.vue'
 export default {
   components: {
@@ -33,12 +39,38 @@ export default {
       visible: false,
       nowPlayingId: '',
       audioElement: new Audio(),
-      playList: []
+      nextEpisode: '',
+      prevEpisode: ''
     })
 
     provide('audio', audio)
+    const hasPrev = computed(() => {
+      return audio.prevEpisode !== null
+    })
+    const hasNext = computed(() => {
+      return audio.nextEpisode !== null
+    })
+    const toEpisodeById = async id => {
+      const episode = await fetchEpisodeById(id)
+      audio.nowPlayingId = episode.id
+      audio.title = episode.title
+      audio.description = episode.description
+      audio.channelName = episode.channelName
+      audio.imageUrl = episode.imageUrl
+      audio.createAt = episode.pubDate
+      audio.duration = episode['itunes:duration']
+      audio.author = episode['itunes:author']
+      audio.audio = episode.audio
+      audio.nextEpisode = episode.nextEpisode
+      audio.prevEpisode = episode.prevEpisode
+      audio.url = episode.audio.url
+    }
+
     return {
-      ...toRefs(audio)
+      ...toRefs(audio),
+      toEpisodeById,
+      hasPrev,
+      hasNext
     }
   }
 }

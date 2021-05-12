@@ -7,7 +7,7 @@
         {{ title }}
       </div>
       <div class="mt-auto">
-        <PBtn icon>
+        <PBtn fab>
           <PlayIcon
             width="2rem"
             height="2rem"
@@ -59,7 +59,9 @@ export default {
       duration: 0,
       author: '',
       audio: {},
-      id: ''
+      id: '',
+      nextEpisode: '',
+      prevEpisode: ''
     })
     const audioControl = inject('audio')
 
@@ -75,7 +77,8 @@ export default {
       states.duration = episode['itunes:duration']
       states.author = episode['itunes:author']
       states.audio = episode.audio
-      states.playList = episode.playList
+      states.nextEpisode = episode.nextEpisode
+      states.prevEpisode = episode.prevEpisode
     }
 
     // @todo create composition api
@@ -92,11 +95,13 @@ export default {
       if (isPlayingEpisode.value) {
         audioControl.isPlay = !audioControl.isPlay
       } else {
-        audioControl.url = `${audio.url}?timestamp=${Date.now()}`
+        audioControl.url = audio.url
         audioControl.cover = states.imageUrl
         audioControl.title = states.title
         audioControl.subTitle = states.channelName
         audioControl.nowPlayingId = states.id
+        audioControl.nextEpisode = states.nextEpisode
+        audioControl.prevEpisode = states.prevEpisode
       }
     }
 

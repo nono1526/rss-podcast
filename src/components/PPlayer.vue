@@ -10,10 +10,11 @@
       :src="cover"
       class="h-full"
     >
-
-    <div class="flex flex-col h-full justify-center mx-5 text-sm">
-      <div>{{ title }}</div>
-      <div class="text-xs text-gray-400">
+    <div class="flex flex-col h-full justify-center mx-5 text-sm w-48">
+      <div class="truncate">
+        {{ title }}
+      </div>
+      <div class="text-xs text-gray-400 truncate">
         {{ subTitle }}
       </div>
     </div>
@@ -21,12 +22,45 @@
       <div
         class="w-7/12 mx-auto"
       >
-        <div class="text-center">
-          <PBtn icon>
+        <div class="flex">
+          <PBtn
+            icon
+            :disabled="!hasNext"
+            @click="$emit('click:next')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+            ><path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            /><path d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6zm6.5 2.14L12.97 12 16 9.86v4.28z" /></svg>
+          </PBtn>
+          <PBtn
+            fab
+            class="mx-auto"
+            @click="toggleAudioPlayState"
+          >
             <PlayIcon
               :show-pause="isPlay"
-              @click="toggleAudioPlayState"
             />
+          </PBtn>
+          <PBtn
+            :disabled="!hasPrev"
+            icon
+            @click="$emit('click:prev')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+            ><path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            /><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z" /></svg>
           </PBtn>
         </div>
         <div class="w-full flex items-center">
@@ -58,6 +92,14 @@ export default {
     PBtn
   },
   props: {
+    hasPrev: {
+      type: Boolean,
+      default: false
+    },
+    hasNext: {
+      type: Boolean,
+      default: false
+    },
     audioElement: {
       type: Audio,
       default: null
@@ -95,7 +137,7 @@ export default {
       default: false
     }
   },
-  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible'],
+  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next'],
   setup (props, { emit }) {
     let audio
     let isDragging = false
@@ -118,7 +160,6 @@ export default {
 
     const onTimeUpdate = e => {
       states.played = audio.currentTime / audio.duration
-      states.loaded = audio.buffered.end(0) / audio.duration
       states.isLoading = false
       if (isDragging) return
       emit('update:currentTime', audio.currentTime)
@@ -201,7 +242,6 @@ export default {
     }
 
     onMounted(() => {
-      console.log(props.audioElement)
       audio = props.audioElement || new Audio()
       bindAudioEvents()
     })

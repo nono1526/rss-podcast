@@ -30,8 +30,7 @@ export async function fetchChannel () {
     image,
     item,
     description,
-    author,
-    playList: channel.item.map(item => item.enclosure['@_url'])
+    author
   }
 }
 
@@ -44,10 +43,12 @@ export async function fetchEpisodeById (id) {
     item: episodes
   } = channel
   const episodeIndex = episodes.findIndex(episode => episode.guid['#text'] === id)
-  if (episodeIndex === -1) return
-
+  if (episodeIndex === -1) return false
   const episode = episodes[episodeIndex]
-
+  const nextIndex = episodeIndex - 1
+  const prevIndex = episodeIndex + 1
+  const nextEpisode = nextIndex < 0 ? null : episodes[nextIndex].guid['#text']
+  const prevEpisode = prevIndex > episodes.length - 1 ? null : episodes[prevIndex].guid['#text']
   return {
     ...episode,
     id: episode.guid['#text'],
@@ -58,6 +59,7 @@ export async function fetchEpisodeById (id) {
       type: episode.enclosure['@_type'],
       url: episode.enclosure['@_url']
     },
-    playList: channel.item.map(item => item.enclosure['@_url'])
+    nextEpisode,
+    prevEpisode
   }
 }
