@@ -1,5 +1,4 @@
 import parser from 'fast-xml-parser'
-import he from 'he'
 let channel = null
 
 async function fetchRSS () {
@@ -31,7 +30,8 @@ export async function fetchChannel () {
     image,
     item,
     description,
-    author
+    author,
+    playList: channel.item.map(item => item.enclosure['@_url'])
   }
 }
 
@@ -43,9 +43,11 @@ export async function fetchEpisodeById (id) {
   const {
     item: episodes
   } = channel
-  const episode = episodes.find(episode => episode.guid['#text'] === id)
-  if (!episode) return
-  console.log(episode)
+  const episodeIndex = episodes.findIndex(episode => episode.guid['#text'] === id)
+  if (episodeIndex === -1) return
+
+  const episode = episodes[episodeIndex]
+
   return {
     ...episode,
     id: episode.guid['#text'],
@@ -55,6 +57,7 @@ export async function fetchEpisodeById (id) {
       length: episode.enclosure['@_length'],
       type: episode.enclosure['@_type'],
       url: episode.enclosure['@_url']
-    }
+    },
+    playList: channel.item.map(item => item.enclosure['@_url'])
   }
 }

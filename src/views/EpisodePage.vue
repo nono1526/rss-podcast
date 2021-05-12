@@ -75,6 +75,7 @@ export default {
       states.duration = episode['itunes:duration']
       states.author = episode['itunes:author']
       states.audio = episode.audio
+      states.playList = episode.playList
     }
 
     // @todo create composition api

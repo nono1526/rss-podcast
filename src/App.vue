@@ -32,7 +32,8 @@ export default {
       currentTime: 0,
       visible: false,
       nowPlayingId: '',
-      audioElement: new Audio()
+      audioElement: new Audio(),
+      playList: []
     })
 
     provide('audio', audio)
