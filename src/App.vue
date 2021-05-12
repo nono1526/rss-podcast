@@ -1,13 +1,16 @@
 <template>
-  <div class="w-screen h-screen bg-gray-50 mb-52">
+  <div class="bg-gray-50 pb-40 min-h-screen">
     <router-view />
     <PPlayer
       v-model:isPlay="isPlay"
       v-model:url="url"
       v-model:currentTime="currentTime"
+      v-model:visible="visible"
+      :audio-element="audioElement"
       :cover="cover"
       :title="title"
       :sub-title="subTitle"
+      fixed
     />
   </div>
 </template>
@@ -26,7 +29,10 @@ export default {
       cover: '',
       title: '',
       subTitle: '',
-      currentTime: 0
+      currentTime: 0,
+      visible: false,
+      nowPlayingId: '',
+      audioElement: new Audio()
     })
 
     provide('audio', audio)
