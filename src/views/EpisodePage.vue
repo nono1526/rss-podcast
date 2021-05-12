@@ -93,7 +93,7 @@ export default {
 
     const play = audio => {
       if (isPlayingEpisode.value) {
-        audioControl.isPlay = !audioControl.isPlay
+        audioControl.isPlaying = !audioControl.isPlaying
       } else {
         audioControl.url = audio.url
         audioControl.cover = states.imageUrl
@@ -111,7 +111,7 @@ export default {
 
     const canPlay = computed(() => {
       const isSameEpisode = audioControl.nowPlayingId === states.id
-      return audioControl.isPlay && isSameEpisode
+      return audioControl.isPlaying && isSameEpisode
     })
 
     watch(() => route.params, () => {

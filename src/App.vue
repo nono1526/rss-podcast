@@ -2,7 +2,7 @@
   <div class="bg-gray-50 pb-40 min-h-screen">
     <router-view />
     <PPlayer
-      v-model:isPlay="isPlay"
+      v-model:isPlaying="isPlaying"
       v-model:url="url"
       v-model:currentTime="currentTime"
       v-model:visible="visible"
@@ -16,6 +16,7 @@
       @click:info="toEpisodePage"
       @click:prev="toEpisodeById(prevEpisode)"
       @click:next="toEpisodeById(nextEpisode)"
+      @click:cover="toChannelPage()"
       @ended="toPrevEpisode"
     />
   </div>
@@ -35,7 +36,7 @@ export default {
     const router = useRouter()
 
     const audio = reactive({
-      isPlay: false,
+      isPlaying: false,
       url: '',
       cover: '',
       title: '',
@@ -78,8 +79,12 @@ export default {
       if (hasPrev.value) {
         toEpisodeById(audio.prevEpisode)
       } else {
-        audio.isPlay = false
+        audio.isPlaying = false
       }
+    }
+
+    const toChannelPage = () => {
+      router.push('/')
     }
 
     return {
@@ -88,7 +93,8 @@ export default {
       hasPrev,
       hasNext,
       toEpisodePage,
-      toPrevEpisode
+      toPrevEpisode,
+      toChannelPage
     }
   }
 }

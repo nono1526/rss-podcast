@@ -9,7 +9,7 @@
     <img
       :src="cover"
       class="h-full cursor-pointer"
-      @click="$emit('click:info')"
+      @click="$emit('click:cover')"
     >
     <div
       class="flex flex-col h-full justify-center mx-5 text-sm w-48 cursor-pointer"
@@ -48,7 +48,7 @@
             @click="toggleAudioPlayState"
           >
             <PlayIcon
-              :show-pause="isPlay"
+              :show-pause="isPlaying"
             />
           </PBtn>
           <PBtn
@@ -116,7 +116,7 @@ export default {
       type: String,
       default: ''
     },
-    isPlay: {
+    isPlaying: {
       type: Boolean,
       default: false
     },
@@ -141,7 +141,7 @@ export default {
       default: false
     }
   },
-  emits: ['update:isPlay', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next', 'click:info', 'ended'],
+  emits: ['update:isPlaying', 'update:url', 'update:currentTime', 'update:visible', 'click:prev', 'click:next', 'click:info', 'ended', 'click:cover'],
   setup (props, { emit }) {
     let audio
     let isDragging = false
@@ -233,16 +233,16 @@ export default {
       showPlayer()
       audio.play()
       emit('update:url', url)
-      emit('update:isPlay', true)
+      emit('update:isPlaying', true)
     })
 
-    watch(() => props.isPlay, isPlay => {
-      isPlay ? audio.play() : audio.pause()
+    watch(() => props.isPlaying, isPlaying => {
+      isPlaying ? audio.play() : audio.pause()
     })
 
     const toggleAudioPlayState = () => {
-      const isPlay = props.isPlay
-      emit('update:isPlay', !isPlay)
+      const isPlaying = props.isPlaying
+      emit('update:isPlaying', !isPlaying)
     }
 
     const dragstart = () => {
