@@ -18,6 +18,15 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
+  scrollBehavior (to, from, savedPosition) {
+    if (to.name === 'channel') {
+      return savedPosition
+    }
+    return {
+      left: 0,
+      top: 0
+    }
+  },
   routes
 })
 
