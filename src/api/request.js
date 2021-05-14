@@ -16,7 +16,6 @@ export async function fetchChannel () {
     const rss = await fetchRSS()
     channel = rss.channel
   }
-
   const {
     title,
     image,
