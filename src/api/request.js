@@ -5,7 +5,7 @@ async function fetchRSS () {
   const options = {
     ignoreAttributes: false
   }
-  const result = await fetch('/db.xml')
+  const result = await fetch('./db.xml')
   const xml = await result.text()
   const json = parser.parse(xml, options)
   return json.rss
