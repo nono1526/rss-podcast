@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 import ChannelPage from '@src/views/ChannelPage.vue'
 import EpisodePage from '@src/views/EpisodePage.vue'
@@ -17,7 +17,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   scrollBehavior (to, from, savedPosition) {
     if (to.name === 'channel') {
       return savedPosition
