@@ -40,8 +40,8 @@
             @click.stop="playEpisode(item)"
           >
             <PlayIcon
-              width="40px"
-              height="40px"
+              width="32px"
+              height="32px"
               :show-pause="canPlay(item.guid['#text'])"
             />
           </PBtn>
@@ -51,14 +51,23 @@
         {{ item.description }}
       </template>
       <template #footer>
-        <span>{{ toYYYYMMDDByDate(item.pubDate) }} · {{ getMinutesFromSecs(item['itunes:duration']) }}</span>
+        <span class="flex items-center">
+          {{ toYYYYMMDDByDate(item.pubDate) }} · {{ getMinutesFromSecs(item['itunes:duration']) }}
+          <div class="w-40 ml-auto">
+            <PSlider
+              v-show="isNowPlayingId(item.guid['#text'])"
+              :value="(currentTime / item['itunes:duration'] * 100)"
+              disabled
+            />
+          </div>
+        </span>
       </template>
     </PItem>
   </div>
 </template>
 
 <script>
-import { onMounted, reactive, toRefs } from 'vue'
+import { onMounted, reactive, toRefs, toRef } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   fetchChannel,
@@ -168,7 +177,9 @@ export default {
       getMinutesFromSecs,
       isPlayingEpisodeById,
       playEpisode,
-      canPlay
+      canPlay,
+      isNowPlayingId,
+      currentTime: toRef(audioControl, 'currentTime')
     }
   }
 }

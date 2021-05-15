@@ -14,6 +14,7 @@
         }"
       >
         <div
+          v-if="!disabled"
           class="hidden group-hover:block h-3 w-3 rounded-full bg-blue-500 absolute shadow-2xl transform -translate-y-2/4 top-2/4 translate-x-2/4 right-0 cursor-pointer hover-target"
         />
       </div>
@@ -39,6 +40,10 @@ export default {
     value: {
       type: Number,
       default: 50
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['input', 'dragstart', 'dragging', 'dragend'],
@@ -49,6 +54,7 @@ export default {
     let barWidth = 0
     const mousedown = e => {
       e.preventDefault()
+      if (props.disabled) return false
       const { width } = e.currentTarget.getBoundingClientRect()
       barWidth = width
       isMousedown = true
