@@ -22,15 +22,24 @@
       v-for="(item, i) in items"
       :key="i"
       :image-url="image.url"
-      :title="item.title"
-      :author="title"
-      :description="item.description"
-      :create-at="item.pubDate"
-      :duration="item['itunes:duration']"
-      :audio-url="item.link"
       @click="toEpisodePage(item)"
     >
-      {{ item }}
+      <template #head>
+        <div class="flex-1 ml-5 flex flex-col justify-center">
+          <h5 class="">
+            {{ item.title }}
+          </h5>
+          <div class="text-sm text-gray-400">
+            {{ author }}
+          </div>
+        </div>
+      </template>
+      <template #body>
+        {{ item.description }}
+      </template>
+      <template #footer>
+        <span>{{ toYYYYMMDDByDate(item.pubDate) }} · {{ getMinutesFromSecs(item['itunes:duration']) }}</span>
+      </template>
     </PItem>
   </div>
 </template>
@@ -76,13 +85,25 @@ export default {
     const toEpisodePage = episode => {
       router.push(`/episode/${encodeURIComponent(episode.guid['#text'])}`)
     }
+    const toYYYYMMDDByDate = d => {
+      const date = new Date(d)
+      return date.toISOString().slice(0, 10)
+    }
+    const getMinutesFromSecs = secs => {
+      const minutes = Math.floor(secs / 60)
+      return `${minutes} 分鐘`
+    }
+
     onMounted(() => {
       init()
     })
 
     return {
       ...toRefs(states),
-      toEpisodePage
+      toEpisodePage,
+      toYYYYMMDDByDate,
+      getMinutesFromSecs
+
     }
   }
 }
