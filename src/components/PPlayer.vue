@@ -37,10 +37,17 @@
               height="24px"
               viewBox="0 0 24 24"
               width="24px"
+              fill="#515151"
             ><path
               d="M0 0h24v24H0V0z"
               fill="none"
             /><path d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6zm6.5 2.14L12.97 12 16 9.86v4.28z" /></svg>
+          </PBtn>
+          <PBtn
+            icon
+            @click="setAudioCurrentTime(currentTime - 10)"
+          >
+            <ReplayIcon />
           </PBtn>
           <PBtn
             fab
@@ -49,6 +56,14 @@
           >
             <PlayIcon
               :show-pause="isPlaying"
+            />
+          </PBtn>
+          <PBtn
+            icon
+            @click="setAudioCurrentTime(currentTime + 10)"
+          >
+            <ReplayIcon
+              fast-forward
             />
           </PBtn>
           <PBtn
@@ -61,6 +76,7 @@
               height="24px"
               viewBox="0 0 24 24"
               width="24px"
+              fill="#515151"
             ><path
               d="M0 0h24v24H0V0z"
               fill="none"
@@ -116,12 +132,14 @@ import { onMounted, watch, toRefs, reactive, computed, onUnmounted } from 'vue'
 import PSlider from '@src/components/PSlider.vue'
 import PlayIcon from '@src/components/PlayIcon.vue'
 import PBtn from '@src/components/PBtn.vue'
+import ReplayIcon from '@src/components/ReplayIcon.vue'
 
 export default {
   components: {
     PSlider,
     PlayIcon,
-    PBtn
+    PBtn,
+    ReplayIcon
   },
   props: {
     hasPrev: {
@@ -287,6 +305,7 @@ export default {
       restTime,
       dragstart,
       setVolume,
+      setAudioCurrentTime,
       ...toRefs(states)
     }
   }

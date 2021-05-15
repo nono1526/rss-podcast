@@ -44,6 +44,6 @@ export default {
 
 <style>
 .p-btn:disabled svg {
-  fill: #6B7280
+  fill: rgb(215, 215, 215)
 }
 </style>
