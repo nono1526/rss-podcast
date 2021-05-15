@@ -19,7 +19,7 @@
           {{ channelName }} - {{ author }}
         </div>
         <div>
-          {{ createDate }} · {{ showMinutesDuration }}
+          {{ toYYYYMMDD(createAt) }} · {{ getMinutesFromSecs(duration) }} 分鐘
         </div>
       </div>
     </div>
@@ -35,7 +35,11 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, watch } from 'vue'
+import {
+  toYYYYMMDD,
+  getMinutesFromSecs
+} from '@src/utils/formatters.js'
+import { onMounted, reactive, toRefs, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEpisodeById } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
@@ -63,7 +67,7 @@ export default {
       description: '',
       channelName: '',
       imageUrl: '',
-      createAt: 'null',
+      createAt: '',
       duration: 0,
       author: '',
       audio: {},
@@ -87,16 +91,6 @@ export default {
       states.nextEpisode = episode.nextEpisode
       states.prevEpisode = episode.prevEpisode
     }
-
-    // @todo create composition api
-    const createDate = computed(() => {
-      const date = new Date(states.createAt)
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-    })
-    const showMinutesDuration = computed(() => {
-      const minutes = Math.floor(states.duration / 60)
-      return `${minutes} 分鐘`
-    })
 
     const onClickPlay = url => {
       if (isNowPlayingId(states.id)) {
@@ -124,8 +118,8 @@ export default {
 
     return {
       ...toRefs(states),
-      createDate,
-      showMinutesDuration,
+      toYYYYMMDD,
+      getMinutesFromSecs,
       play,
       canPlay,
       onClickPlay

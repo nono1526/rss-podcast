@@ -1,4 +1,4 @@
-import { onMounted, reactive, toRefs, computed, inject, watch } from 'vue'
+import { inject } from 'vue'
 
 export function usePPlayer () {
   const audioControl = inject('audio')

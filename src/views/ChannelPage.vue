@@ -52,7 +52,7 @@
       </template>
       <template #footer>
         <span class="flex items-center">
-          {{ toYYYYMMDDByDate(item.pubDate) }} · {{ getMinutesFromSecs(item['itunes:duration']) }}
+          {{ toYYYYMMDD(item.pubDate) }} · {{ getMinutesFromSecs(item['itunes:duration']) }} 分鐘
           <div class="w-40 ml-auto">
             <PSlider
               v-show="isNowPlayingId(item.guid['#text'])"
@@ -75,6 +75,10 @@ import {
   findNextEpisodeIdById
 } from '@src/api/request.js'
 import { usePPlayer } from '@src/compostable/audio.js'
+import {
+  toYYYYMMDD,
+  getMinutesFromSecs
+} from '@src/utils/formatters.js'
 
 import PSlider from '@src/components/PSlider.vue'
 import PlayIcon from '@src/components/PlayIcon.vue'
@@ -157,14 +161,6 @@ export default {
     const toEpisodePage = episode => {
       router.push(`/episode/${encodeURIComponent(episode.guid['#text'])}`)
     }
-    const toYYYYMMDDByDate = d => {
-      const date = new Date(d)
-      return date.toISOString().slice(0, 10)
-    }
-    const getMinutesFromSecs = secs => {
-      const minutes = Math.floor(secs / 60)
-      return `${minutes} 分鐘`
-    }
 
     onMounted(() => {
       init()
@@ -173,7 +169,7 @@ export default {
     return {
       ...toRefs(states),
       toEpisodePage,
-      toYYYYMMDDByDate,
+      toYYYYMMDD,
       getMinutesFromSecs,
       isPlayingEpisodeById,
       playEpisode,
