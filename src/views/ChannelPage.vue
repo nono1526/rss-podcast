@@ -25,13 +25,26 @@
       @click="toEpisodePage(item)"
     >
       <template #head>
-        <div class="flex-1 ml-5 flex flex-col justify-center">
+        <div class="flex ml-5 flex-col justify-center">
           <h5 class="">
             {{ item.title }}
           </h5>
           <div class="text-sm text-gray-400">
             {{ author }}
           </div>
+        </div>
+        <div class="w-40 ml-auto text-right">
+          <PBtn
+            fab
+            class="mx-auto"
+            @click.stop="playEpisode(item)"
+          >
+            <PlayIcon
+              width="40px"
+              height="40px"
+              :show-pause="canPlay(item.guid['#text'])"
+            />
+          </PBtn>
         </div>
       </template>
       <template #body>
@@ -47,16 +60,40 @@
 <script>
 import { onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { fetchChannel } from '@src/api/request.js'
+import {
+  fetchChannel,
+  findPreviousEpisodeIdById,
+  findNextEpisodeIdById
+} from '@src/api/request.js'
+import { usePPlayer } from '@src/compostable/audio.js'
+
+import PSlider from '@src/components/PSlider.vue'
+import PlayIcon from '@src/components/PlayIcon.vue'
+import PBtn from '@src/components/PBtn.vue'
 import PCover from '@src/components/PCover.vue'
 import PItem from '@src/components/PItem.vue'
+
 export default {
   components: {
     PCover,
-    PItem
+    PItem,
+    PSlider,
+    PBtn,
+    PlayIcon
   },
   setup () {
     const router = useRouter()
+    const {
+      audioControl,
+      play,
+      setPlayer,
+      isNowPlayingId,
+      canPlay
+    } = usePPlayer()
+
+    const isPlayingEpisodeById = id => {
+      return audioControl.nowPlayingId === id
+    }
 
     const states = reactive({
       title: '',
@@ -82,6 +119,32 @@ export default {
       states.description = description
     }
 
+    const playEpisode = item => {
+      const {
+        title,
+        guid: {
+          '#text': id
+        },
+        enclosure: {
+          '@_url': url
+        }
+      } = item
+
+      if (isNowPlayingId(id)) {
+        audioControl.isPlaying = !audioControl.isPlaying
+      } else {
+        play(url)
+        setPlayer({
+          cover: states.image.url,
+          title,
+          subTitle: states.author,
+          nowPlayingId: id,
+          nextEpisode: findNextEpisodeIdById(id),
+          prevEpisode: findPreviousEpisodeIdById(id)
+        })
+      }
+    }
+
     const toEpisodePage = episode => {
       router.push(`/episode/${encodeURIComponent(episode.guid['#text'])}`)
     }
@@ -102,8 +165,10 @@ export default {
       ...toRefs(states),
       toEpisodePage,
       toYYYYMMDDByDate,
-      getMinutesFromSecs
-
+      getMinutesFromSecs,
+      isPlayingEpisodeById,
+      playEpisode,
+      canPlay
     }
   }
 }

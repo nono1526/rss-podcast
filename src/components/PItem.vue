@@ -8,7 +8,9 @@
         :src="imageUrl"
         class="w-14 h-14 border"
       >
-      <slot name="head" />
+      <div class="flex flex-1">
+        <slot name="head" />
+      </div>
     </div>
     <p class="max-h-20 line-clamp-3 max-w-full my-5">
       <slot name="body" />

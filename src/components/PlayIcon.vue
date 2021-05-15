@@ -39,7 +39,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#000'
+      default: '#515151'
     },
     width: {
       type: String,

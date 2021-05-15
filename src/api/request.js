@@ -41,16 +41,17 @@ export async function fetchEpisodeById (id) {
   const {
     item: episodes
   } = channel
-  const episodeIndex = episodes.findIndex(episode => episode.guid['#text'] === id)
-  if (episodeIndex === -1) return false
-  const episode = episodes[episodeIndex]
-  const nextIndex = episodeIndex - 1
-  const prevIndex = episodeIndex + 1
-  const nextEpisode = nextIndex < 0 ? null : episodes[nextIndex].guid['#text']
-  const prevEpisode = prevIndex > episodes.length - 1 ? null : episodes[prevIndex].guid['#text']
+
+  const episode = episodes.find(episode => episode.guid['#text'] === id)
+
+  if (!episode) return false
+
+  const episodeId = episode.guid['#text']
+  const nextEpisode = findNextEpisodeIdById(episodeId)
+  const prevEpisode = findPreviousEpisodeIdById(episodeId)
   return {
     ...episode,
-    id: episode.guid['#text'],
+    id: episodeId,
     channelName: channel.title,
     imageUrl: channel.image.url,
     audio: {
@@ -61,4 +62,24 @@ export async function fetchEpisodeById (id) {
     nextEpisode,
     prevEpisode
   }
+}
+
+export function findPreviousEpisodeIdById (id) {
+  const {
+    item: episodes
+  } = channel
+  const episodeIndex = episodes.findIndex(episode => episode.guid['#text'] === id)
+  const prevIndex = episodeIndex + 1
+  const prevEpisode = prevIndex > episodes.length - 1 ? null : episodes[prevIndex].guid['#text']
+  return prevEpisode
+}
+
+export function findNextEpisodeIdById (id) {
+  const {
+    item: episodes
+  } = channel
+  const episodeIndex = episodes.findIndex(episode => episode.guid['#text'] === id)
+  const nextIndex = episodeIndex - 1
+  const nextEpisode = nextIndex < 0 ? null : episodes[nextIndex].guid['#text']
+  return nextEpisode
 }
