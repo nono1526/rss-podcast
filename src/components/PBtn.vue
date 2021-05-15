@@ -28,10 +28,10 @@ export default {
     const getClasses = () => {
       let classes = ''
       if (props.fab) {
-        classes += 'rounded-full p-1 bg-white border transform hover:scale-110 transition transition-transform '
+        classes += 'p-btn--fab '
       }
       if (props.icon) {
-        classes += 'rounded-full p-1 transform '
+        classes += 'p-btn--icon '
       }
       return classes.split(' ')
     }
@@ -46,4 +46,12 @@ export default {
 .p-btn:disabled svg {
   fill: rgb(215, 215, 215)
 }
+.p-btn.p-btn--fab {
+  @apply rounded-full p-1 bg-white border transform hover:scale-110 transition transition-transform;
+}
+
+.p-btn.p-btn--icon {
+  @apply p-1
+}
+
 </style>
