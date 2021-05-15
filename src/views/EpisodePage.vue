@@ -11,8 +11,8 @@
           <PlayIcon
             width="2rem"
             height="2rem"
-            :show-pause="canPlay"
-            @click="play(audio)"
+            :show-pause="canPlay(id)"
+            @click="onClickPlay(audio.url)"
           />
         </PBtn>
         <div class="text-sm mt-3">
@@ -35,12 +35,13 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, inject, watch } from 'vue'
+import { onMounted, reactive, toRefs, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEpisodeById } from '@src/api/request.js'
 import PCover from '@src/components/PCover.vue'
 import PlayIcon from '@src/components/PlayIcon.vue'
 import PBtn from '@src/components/PBtn.vue'
+import { usePPlayer } from '@src/compostable/audio.js'
 
 export default {
   components: {
@@ -50,6 +51,13 @@ export default {
   },
   setup () {
     const route = useRoute()
+    const {
+      audioControl,
+      play,
+      setPlayer,
+      isNowPlayingId,
+      canPlay
+    } = usePPlayer()
     const states = reactive({
       title: '',
       description: '',
@@ -63,7 +71,6 @@ export default {
       nextEpisode: '',
       prevEpisode: ''
     })
-    const audioControl = inject('audio')
 
     const init = async () => {
       const { id } = route.params
@@ -91,28 +98,21 @@ export default {
       return `${minutes} 分鐘`
     })
 
-    const play = audio => {
-      if (isPlayingEpisode.value) {
+    const onClickPlay = url => {
+      if (isNowPlayingId(states.id)) {
         audioControl.isPlaying = !audioControl.isPlaying
       } else {
-        audioControl.url = audio.url
-        audioControl.cover = states.imageUrl
-        audioControl.title = states.title
-        audioControl.subTitle = states.channelName
-        audioControl.nowPlayingId = states.id
-        audioControl.nextEpisode = states.nextEpisode
-        audioControl.prevEpisode = states.prevEpisode
+        play(url)
+        setPlayer({
+          cover: states.imageUrl,
+          title: states.title,
+          subTitle: states.channelName,
+          nowPlayingId: states.id,
+          nextEpisode: states.nextEpisode,
+          prevEpisode: states.prevEpisode
+        })
       }
     }
-
-    const isPlayingEpisode = computed(() => {
-      return audioControl.nowPlayingId === states.id
-    })
-
-    const canPlay = computed(() => {
-      const isSameEpisode = audioControl.nowPlayingId === states.id
-      return audioControl.isPlaying && isSameEpisode
-    })
 
     watch(() => route.params, () => {
       init()
@@ -127,7 +127,8 @@ export default {
       createDate,
       showMinutesDuration,
       play,
-      canPlay
+      canPlay,
+      onClickPlay
     }
   }
 }
