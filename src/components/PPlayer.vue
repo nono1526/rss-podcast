@@ -230,24 +230,12 @@ export default {
       return formatDurationSecs(currentTimeSecs)
     })
 
-    const formatDurationSecs = secs => {
-      const hours = Math.floor(secs / 60 / 60)
-      const minutes = Math.floor(secs / 60)
-      const seconds = secs % 60
-      let timeString = ''
-      timeString += hours > 0 ? hours : ''
-      timeString += minutes > 0
-        ? minutes < 10
-          ? `0${minutes}`
-          : minutes
-        : '00'
-      timeString += ':'
-      timeString += seconds > 0
-        ? seconds < 10
-          ? `0${seconds}`
-          : seconds
-        : '00'
-      return timeString
+    const formatDurationSecs = durationInSecs => {
+      const time = new Date(durationInSecs * 1000).toISOString().substr(11, 8)
+      const [hours, mins, secs] = time.split(':')
+      return parseInt(hours) > 0
+        ? [hours, mins, secs].join(':')
+        : [mins, secs].join(':')
     }
 
     const restTime = computed(() => {
