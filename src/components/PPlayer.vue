@@ -24,7 +24,7 @@
     </div>
     <div class="flex-1 flex flex-col justify-center">
       <div
-        class="w-7/12 mx-auto"
+        class="w-8/12 mx-auto"
       >
         <div class="flex">
           <PBtn
@@ -79,6 +79,34 @@
           <span class="ml-3 w-14 text-gray-500 text-sm">{{ restTime }}</span>
         </div>
       </div>
+    </div>
+    <div class="w-36 flex items-center mr-5">
+      <svg
+        class="mx-2"
+        xmlns="http://www.w3.org/2000/svg"
+        height="32px"
+        viewBox="0 0 24 24"
+        width="32px"
+        fill="#515151"
+      ><path
+        d="M0 0h24v24H0V0z"
+        fill="none"
+      /><path d="M14 8.83v6.34L11.83 13H9v-2h2.83L14 8.83M16 4l-5 5H7v6h4l5 5V4z" /></svg>
+      <PSlider
+        :value="volume"
+        @input="setVolume"
+      />
+      <svg
+        class="mx-2"
+        xmlns="http://www.w3.org/2000/svg"
+        height="32px"
+        viewBox="0 0 24 24"
+        width="32px"
+        fill="#515151"
+      ><path
+        d="M0 0h24v24H0V0z"
+        fill="none"
+      /><path d="M3 9v6h4l5 5V4L7 9H3zm7-.17v6.34L7.83 13H5v-2h2.83L10 8.83zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" /></svg>
     </div>
   </div>
 </template>
@@ -149,7 +177,8 @@ export default {
       played: 0,
       loaded: 0,
       duration: 0,
-      isLoading: false
+      isLoading: false,
+      volume: 50
     })
 
     const onLoadmetadata = () => {
@@ -240,6 +269,11 @@ export default {
       isPlaying ? audio.play() : audio.pause()
     })
 
+    const setVolume = val => {
+      audio.volume = val / 100
+      states.volume = val
+    }
+
     const toggleAudioPlayState = () => {
       const isPlaying = props.isPlaying
       emit('update:isPlaying', !isPlaying)
@@ -251,6 +285,7 @@ export default {
 
     onMounted(() => {
       audio = props.audioElement || new Audio()
+      audio.volume = states.volume / 100
       bindAudioEvents()
     })
 
@@ -263,6 +298,7 @@ export default {
       playedTime,
       restTime,
       dragstart,
+      setVolume,
       ...toRefs(states)
     }
   }
