@@ -5,7 +5,7 @@ async function fetchRSS () {
   const options = {
     ignoreAttributes: false
   }
-  const result = await fetch('./db.xml')
+  const result = await fetch('https://api.soundon.fm/v2/podcasts/954689a5-3096-43a4-a80b-7810b219cef3/feed.xml')
   const xml = await result.text()
   const json = parser.parse(xml, options)
   return json.rss
