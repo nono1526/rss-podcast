@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PSlider.vue should match snapshot 1`] = `
+"<div class=\\"p-slider\\" draggable=\\"\\">
+  <div class=\\"p-slider__track-container\\">
+    <div class=\\"p-slider__track-fill\\" style=\\"width: 50%;\\">
+      <div class=\\"p-slider__thumb group-hover:block\\"></div>
+    </div>
+  </div>
+</div>"
+`;
