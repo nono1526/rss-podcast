@@ -33,6 +33,9 @@ export default {
       if (props.icon) {
         classes += 'p-btn--icon '
       }
+      if (props.disabled) {
+        classes += 'p-btn--disabled '
+      }
       return classes.split(' ')
     }
     return {
@@ -43,9 +46,10 @@ export default {
 </script>
 
 <style>
-.p-btn:disabled svg {
+.p-btn.p-btn--disabled:disabled svg {
   fill: rgb(215, 215, 215)
 }
+
 .p-btn.p-btn--fab {
   @apply rounded-full p-1 bg-white border transform hover:scale-110 transition transition-transform;
 }
