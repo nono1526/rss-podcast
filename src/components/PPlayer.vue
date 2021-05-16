@@ -30,7 +30,8 @@
           <PBtn
             icon
             :disabled="!hasNext"
-            @click="$emit('click:next')"
+            data-test="next-btn"
+            @click="$emit('click:next', e)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -45,6 +46,7 @@
           </PBtn>
           <PBtn
             icon
+            data-test="replay-10-btn"
             @click="setAudioCurrentTime(currentTime - 10)"
           >
             <ReplayIcon />
@@ -52,6 +54,7 @@
           <PBtn
             fab
             class="mx-auto"
+            data-test="play-btn"
             @click="toggleAudioPlayState"
           >
             <PlayIcon
@@ -60,6 +63,7 @@
           </PBtn>
           <PBtn
             icon
+            data-test="quick-10-btn"
             @click="setAudioCurrentTime(currentTime + 10)"
           >
             <ReplayIcon
@@ -68,8 +72,9 @@
           </PBtn>
           <PBtn
             :disabled="!hasPrev"
+            data-test="prev-btn"
             icon
-            @click="$emit('click:prev')"
+            @click="$emit('click:prev', e)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -110,6 +115,7 @@
       /><path d="M14 8.83v6.34L11.83 13H9v-2h2.83L14 8.83M16 4l-5 5H7v6h4l5 5V4z" /></svg>
       <PSlider
         :value="volume"
+        data-test="volume-slider"
         @input="setVolume"
       />
       <svg
