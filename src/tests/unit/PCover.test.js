@@ -7,25 +7,46 @@ describe('PCover.vue', () => {
       ...options
     })
   })
-  it('renders props.title when passed', () => {
-    const title = '股癌'
-
+  it('renders props.imgUrl when passed', () => {
+    const imageUrl = 'https://test.jpg'
+    const imageAlt = 'image alt'
     const wrapper = mountFunction({
       propsData: {
-        title
+        imageUrl,
+        imageAlt
       }
     })
-    expect(wrapper.html()).toContain(title)
+    const img = wrapper.find('img')
+    expect(img.attributes('src')).toBe(imageUrl)
+    expect(img.attributes('alt')).toBe(imageAlt)
   })
 
-  it('renders props.description when passed', () => {
-    const description = 'description'
-
+  it('renders props.imgUrl when passed', () => {
+    const imageUrl = 'https://test.jpg'
+    const imageAlt = 'image alt'
     const wrapper = mountFunction({
       propsData: {
-        description
+        imageUrl,
+        imageAlt
       }
     })
-    expect(wrapper.html()).toContain(description)
+    const img = wrapper.find('img')
+    expect(img.attributes('src')).toBe(imageUrl)
+    expect(img.attributes('alt')).toBe(imageAlt)
+  })
+
+  it('snapshot testing', () => {
+    const imageUrl = 'https://test.jpg'
+    const imageAlt = 'image alt'
+    const wrapper = mountFunction({
+      propsData: {
+        imageUrl,
+        imageAlt
+      },
+      slots: {
+        default: '<div>Default slot</div>'
+      }
+    })
+    expect(wrapper.element).toMatchSnapshot()
   })
 })
