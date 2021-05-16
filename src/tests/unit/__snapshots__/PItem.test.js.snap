@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PItem.vue slots snapshot testing 1`] = `
+<div
+  class="shadow my-8 p-5 bg-white cursor-pointer hover:shadow-lg transition-all duration-500"
+>
+  <div
+    class="flex"
+  >
+    <img
+      class="w-14 h-14 border"
+      src=""
+    />
+    <div
+      class="flex flex-1"
+    >
+      
+      <stub />
+      
+    </div>
+  </div>
+  <p
+    class="max-h-20 line-clamp-3 max-w-full my-5"
+  >
+    
+    <stub />
+    
+  </p>
+  <div
+    class="text-gray-400"
+  >
+    
+    <stub />
+    
+  </div>
+</div>
+`;
